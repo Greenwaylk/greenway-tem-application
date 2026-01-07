@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Greenway Agencies</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+
+/* ================= GLOBAL ================= */
+:root{
+  --block-gap: 22px;
+  --row-gap: 12px;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f0f2f5;
+}
+
+/* ================= LOGIN ================= */
+.login-wrapper {
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+}
+.login-card {
+  width:100%;
+  max-width:380px;
+  padding:40px;
+  border-radius:18px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  color:#fff;
+}
+.login-card h1 { text-align:center; margin:0; }
+.login-card p { text-align:center; opacity:.85; margin:10px 0 32px; }
+
+.input-group { margin-bottom:20px; }
+
+.input-group input {
+  width:350px;
+  padding:14px 16px;
+  border-radius:12px;
+  border:none;
+  outline:none;
+  background: rgba(255,255,255,.25);
+  color:#fff;
+  font-size:15px;
+}
+.input-group input::placeholder {
+  color:rgba(255,255,255,.7);
+}
+
+.login-btn {
+  width:100%;
+  padding:15px;
+  border-radius:14px;
+  border:none;
+  font-size:16px;
+  font-weight:bold;
+  background: linear-gradient(135deg,#ff512f,#dd2476);
+  color:#fff;
+  cursor:pointer;
+}
+
+
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f0f2f5;
+}
+.container {
+  max-width: 600px;
+  margin: 20px auto;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 25px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.15);
+}
+.header { text-align:center; margin-bottom:15px; }
+.header img { max-height:60px; margin-bottom:8px; }
+.header h1 { margin:0; font-size:26px; color:#1bd027; font-weight:bold; }
+.subtitle { text-align:center; font-weight:bold; margin:20px 0; font-size:16px; color:#333; border-bottom:1px dashed #aaa; padding-bottom:8px; }
+.block { margin-bottom:16px; }
+.label { font-weight:bold; margin-bottom:8px; display:block; font-size:14px; }
+input[type="text"], input[type="date"], select { width:100%; padding:10px 12px; border-radius:6px; border:1px solid #999; font-size:14px; box-sizing:border-box; }
+.row { display:flex; gap:10px; flex-wrap:wrap; }
+.option { flex:1; text-align:center; padding:12px 0; border-radius:8px; cursor:pointer; font-weight:600; background:#f7f7f7; border:1px solid #ccc; transition:all 0.2s; min-width:80px; user-select:none; font-size:14px; }
+input[type="radio"], input[type="checkbox"] { display:none; }
+input:checked + .option { background: linear-gradient(135deg, #10941f, #29ca13); color:#fff; border-color:#991194; }
+.photo { border:2px dashed #999; border-radius:8px; padding:12px; text-align:center; cursor:pointer; }
+.photo img { max-width:100%; border-radius:6px; margin-top:8px; }
+button { width:100%; padding:14px; background:#44ca1e; color:#fff; font-size:16px; font-weight:bold; border:none; border-radius:8px; cursor:pointer; margin-top:12px; }
+button:hover { background: #10941f; }
+.hidden { display:none; }
+</style>
+</head>
+
+<body>
+
+<div class="login-wrapper" id="loginPage">
+  <div class="login-card">
+    <h1>Sign In</h1>
+    <p>Greenway Application System</p>
+
+    <div class="input-group">
+      <input type="text" id="username" placeholder="Username">
+    </div>
+
+    <div class="input-group">
+      <input type="password" id="password" placeholder="Password">
+    </div>
+
+    <button class="login-btn" onclick="login()">Login</button>
+  </div>
+</div>
+
+
+
+<div class="container hidden" id="appPage">
+  <!-- Header -->
+  <div class="header">
+    <img src="image.png" alt="Greenway Logo">
+    <h1>GREENWAY AGENCIES (PVT) LTD</h1>
+
+  </div>
+
+    <!-- Token Number -->
+    <div class="block">
+      <div class="label">Token Number</div>
+      <input type="text" id="token" placeholder="Enter token number">
+    </div>
+
+    <!-- Name -->
+    <div class="block">
+      <div class="label">Full Name</div>
+      <input type="text" id="fullname" placeholder="Enter full name">
+    </div>
+
+    <!-- Gender -->
+    <div class="block">
+      <div class="label">Gender</div>
+      <div class="row">
+        <label><input type="radio" name="gender" value="Male"><div class="option">Male</div></label>
+        <label><input type="radio" name="gender" value="Female"><div class="option">Female</div></label>
+      </div>
+    </div>
+
+    <!-- NIC + Age -->
+    <div class="block" style="display:flex; gap:15px; align-items:flex-end;">
+      <div style="flex:1;">
+        <div class="label">NIC Number</div>
+        <input type="text" id="nic" placeholder="Enter NIC number" onkeyup="calculateAgeFromNIC()">
+      </div>
+
+      <div style="width:120px; text-align:center;">
+        <div class="label">Age</div>
+        <div id="ageDisplay"
+            style="padding:12px; background:#f7f7f7; border-radius:8px; border:1px solid #ccc; font-weight:bold;">
+          --
+        </div>
+      </div>
+    </div>
+
+    <!-- Passport -->
+    <div class="block">
+      <div class="label">Do you have a Passport?</div>
+      <div class="row">
+        <label>
+          <input type="radio" name="passport" value="Yes" onclick="togglePassport(true)">
+          <div class="option">Yes</div>
+        </label>
+        <label>
+          <input type="radio" name="passport" value="No" onclick="togglePassport(false)">
+          <div class="option">No</div>
+        </label>
+      </div>
+    </div>
+
+    <div class="block hidden" id="passportBox">
+      <input type="text" id="passportNo" placeholder="Enter Passport Number">
+    </div>
+
+    <!-- Abroad -->
+    <div class="block">
+      <div class="label">Have you been abroad?</div>
+      <div class="row">
+        <label><input type="radio" name="abroad" value="Yes"><div class="option">Yes</div></label>
+        <label><input type="radio" name="abroad" value="No"><div class="option">No</div></label>
+      </div>
+    </div>
+
+    <!-- Skills -->
+    <div class="block">
+      <div class="label">Any Skills?</div>
+      <div class="row">
+        <label><input type="checkbox" value="Cooking"><div class="option">Cooking</div></label>
+        <label><input type="checkbox" value="Driving"><div class="option">Driving</div></label>
+        <label><input type="checkbox" value="Caregiver"><div class="option">Caregiver</div></label>
+      </div>
+    </div>
+
+    <!-- Phone -->
+    <div class="block">
+      <div class="label">Phone Number</div>
+      <input type="text" id="phone" placeholder="07XXXXXXXX">
+    </div>
+
+
+      <!-- Photo -->
+      <div class="block">
+        <div class="label">Photo</div>
+        <div class="photo" onclick="document.getElementById('photoInput').click()">
+          Tap to Upload Photo
+          <input id="photoInput" type="file" accept="image/*" capture="camera" hidden onchange="previewPhoto(event)">
+          <img id="photoPreview">
+        </div>
+      </div>
+
+      <button onclick="generatePDF()">Submit & Generate PDF</button>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="pdfGenerator.js"></script>
+<script>
+function toggleAbroad(show){
+  document.getElementById('abroadBox').style.display = show ? 'block' : 'none';
+}
+function previewPhoto(e){
+  const img = document.getElementById('photoPreview');
+  img.src = URL.createObjectURL(e.target.files[0]);
+  img.style.maxHeight = "120px";
+}
+
+
+function calculateAgeFromNIC() {
+  const nic = document.getElementById("nic").value.trim();
+  const ageBox = document.getElementById("ageDisplay");
+
+  if (nic.length < 10) {
+    ageBox.textContent = "--";
+    return;
+  }
+
+  let birthYear;
+
+  // OLD NIC (e.g. 861420868V)
+  if (/^\d{9}[VvXx]$/.test(nic)) {
+    const year = parseInt(nic.substring(0, 2), 10);
+    birthYear = 1900 + year;
+  }
+
+  // NEW NIC (e.g. 200413901451)
+  else if (/^\d{12}$/.test(nic)) {
+    birthYear = parseInt(nic.substring(0, 4), 10);
+  } else {
+    ageBox.textContent = "Invalid";
+    return;
+  }
+
+  const currentYear = new Date().getFullYear();
+  const age = currentYear - birthYear;
+
+  ageBox.textContent = age;
+}
+
+/* Passport toggle */
+function togglePassport(show) {
+  document.getElementById("passportBox").style.display = show ? "block" : "none";
+}
+
+/* LOGIN USERS */
+const users = { kasun: "1234", admin: "admin123" };
+
+function login(){
+  const u = username.value;
+  const p = password.value;
+  if(users[u] === p){
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("appPage").classList.remove("hidden");
+  } else {
+    alert("Invalid Login ❌");
+  }
+}
+
+
+</script>
+
+</body>
+</html>
