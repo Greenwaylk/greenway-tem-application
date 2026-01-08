@@ -193,4 +193,15 @@ async function generatePDF() {
   doc.text("© Greenway Agencies | www.greenway.lk", PAGE_WIDTH / 2, PAGE_HEIGHT - 20, { align: "center" });
 
   doc.save(`${fullname}_Application.pdf`);
+
+   // =============================
+  // RESET FORM
+  // =============================
+  document.getElementById("appPage").querySelectorAll("input").forEach(i => {
+    if (i.type === "radio" || i.type === "checkbox") i.checked = false;
+    else i.value = "";
+  });
+  document.getElementById("photoPreview").src = "";
+  document.getElementById("ageDisplay").textContent = "--";
 }
+
