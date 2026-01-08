@@ -2,27 +2,37 @@ async function generatePDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit: "pt", format: "a4" });
 
-  /* -------------------------
+  const PAGE_WIDTH = doc.internal.pageSize.width;
+  const PAGE_HEIGHT = doc.internal.pageSize.height;
+  const MARGIN = 40;
+  const FOOTER_HEIGHT = 40;
+
+  /* =============================
      COLLECT DATA
-  ------------------------- */
-  const token     = document.getElementById('token')?.value || '';
-  const fullname  = document.getElementById('fullname')?.value || '';
-  const gender    = document.querySelector('input[name="gender"]:checked')?.value || '';
-  const nic       = document.getElementById('nic')?.value || '';
-  const age       = document.getElementById('ageDisplay')?.textContent || '';
-  const passport  = document.querySelector('input[name="passport"]:checked')?.value || '';
-  const passportNo= document.getElementById('passportNo')?.value || '';
-  const abroad    = document.querySelector('input[name="abroad"]:checked')?.value || '';
-  const phone     = document.getElementById('phone')?.value || '';
-  const skills    = [...document.querySelectorAll('input[type="checkbox"]:checked')]
-                    .map(i => i.value).join(', ');
+  ============================= */
+  const token     = document.getElementById('token')?.value || '-';
+  const fullname  = document.getElementById('fullname')?.value || '-';
+  const gender    = document.querySelector('input[name="gender"]:checked')?.value || '-';
+  const nic       = document.getElementById('nic')?.value || '-';
+  const age       = document.getElementById('ageDisplay')?.textContent || '-';
+  const passport  = document.querySelector('input[name="passport"]:checked')?.value || '-';
+  const abroad    = document.querySelector('input[name="abroad"]:checked')?.value || '-';
+  const phone     = document.getElementById('phone')?.value || '-';
+
+  const fbrpr     = document.querySelector('input[name="fbr_pr"]:checked')?.value || '-';
+  const sixMonths = document.querySelector('input[name="six_months"]:checked')?.value || '-';
+  const experience= document.querySelector('input[name="experience"]:checked')?.value || '-';
+  const category  = document.querySelector('input[name="category"]:checked')?.value || '-';
+
+  const skills = [...document.querySelectorAll('.block input[type="checkbox"]:checked')]
+    .map(i => i.value).join(', ') || 'None';
 
   const photoImg = document.getElementById('photoPreview');
   const logoImg  = document.querySelector('.header img');
 
-  /* -------------------------
+  /* =============================
      IMAGE → BASE64
-  ------------------------- */
+  ============================= */
   const toBase64 = (img) => new Promise(resolve => {
     if (!img || !img.src) return resolve(null);
     const image = new Image();
@@ -41,46 +51,53 @@ async function generatePDF() {
   const logo  = await toBase64(logoImg);
   const photo = await toBase64(photoImg);
 
-  /* -------------------------
+  /* =============================
      BACKGROUND
-  ------------------------- */
+  ============================= */
   doc.setFillColor(245,245,245);
-  doc.rect(0, 0, 595, 842, 'F');
+  doc.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT, 'F');
 
-  /* -------------------------
+  /* =============================
      HEADER
-  ------------------------- */
+  ============================= */
   doc.setFillColor(16,148,31);
-  doc.rect(0, 0, 595, 80, 'F');
+  doc.rect(0, 0, PAGE_WIDTH, 80, 'F');
 
   if (logo) doc.addImage(logo, "PNG", 20, 10, 60, 60);
 
   doc.setTextColor(255);
   doc.setFontSize(22);
   doc.setFont(undefined, "bold");
-  doc.text("GREENWAY AGENCIES (PVT) LTD", 297, 50, null, null, "center");
+  doc.text("GREENWAY AGENCIES (PVT) LTD", PAGE_WIDTH / 2, 50, { align: "center" });
 
-  /* -------------------------
+  /* =============================
      PHOTO
-  ------------------------- */
+  ============================= */
   if (photo) {
-    doc.roundedRect(237, 95, 120, 150, 14, 14, 'FD');
-    doc.addImage(photo, "PNG", 237, 95, 120, 150);
+    doc.setFillColor(255);
+    doc.roundedRect(PAGE_WIDTH / 2 - 60, 95, 120, 150, 14, 14, 'FD');
+    doc.addImage(photo, "PNG", PAGE_WIDTH / 2 - 60, 95, 120, 150);
   }
 
-  /* -------------------------
-     HELPERS
-  ------------------------- */
-  function row(label, value, x, y, w = 250) {
+  /* =============================
+     ROW HELPER (AUTO HEIGHT + PAGE BREAK)
+  ============================= */
+  function row(label, value, x, y, w) {
+    const lines = doc.splitTextToSize(value, w - 20);
+    const boxHeight = Math.max(28, lines.length * 16 + 16);
+
+    // PAGE BREAK
+    if (y + boxHeight + 50 > PAGE_HEIGHT - FOOTER_HEIGHT) {
+      doc.addPage();
+      y = MARGIN; // reset top margin
+    }
+
     doc.setFontSize(11);
     doc.setTextColor(90);
     doc.text(label, x, y);
 
-    const lines = doc.splitTextToSize(value || "-", w - 20);
-    const boxHeight = Math.max(28, lines.length * 16 + 16);
-
-    doc.setDrawColor(210);
     doc.setFillColor(255);
+    doc.setDrawColor(210);
     doc.roundedRect(x, y + 12, w, boxHeight, 8, 8, 'FD');
 
     doc.setTextColor(0);
@@ -89,81 +106,91 @@ async function generatePDF() {
     return y + boxHeight + 24;
   }
 
-  /* -------------------------
-     CONTENT - UPGRADED DESIGN
-  ------------------------- */
+  /* =============================
+     CONTENT
+  ============================= */
   let y = 260;
 
-  // ===== HIGHLIGHT CARD: Token + Name =====
+  // TOKEN + NAME
   doc.setFillColor(255);
-  doc.roundedRect(40, y, 515, 100, 18, 18, 'F');
   doc.setDrawColor(220);
-  doc.roundedRect(40, y, 515, 100, 18, 18);
+  doc.roundedRect(40, y, PAGE_WIDTH - 80, 100, 18, 18, 'FD');
 
-  // Token badge
   doc.setFillColor(34,139,34);
   doc.roundedRect(55, y + 25, 120, 50, 14, 14, 'F');
+
   doc.setTextColor(255);
   doc.setFontSize(14);
-  doc.setFont(undefined, "bold");
-  doc.text("TOKEN", 115, y + 45, null, null, "center");
+  doc.text("TOKEN", 115, y + 45, { align: "center" });
   doc.setFontSize(18);
-  doc.text(token || "--", 115, y + 70, null, null, "center");
+  doc.text(token, 115, y + 70, { align: "center" });
 
-  // Full Name
   doc.setTextColor(0);
   doc.setFontSize(20);
-  doc.setFont(undefined, "bold");
-  doc.text(fullname || "FULL NAME", 315, y + 55, null, null, "center");
+  doc.text(fullname, PAGE_WIDTH / 2 + 80, y + 60, { align: "center" });
 
   y += 130;
 
-  // ===== SECTION 1 : PERSONAL DETAILS =====
+  // PERSONAL DETAILS
   doc.setFillColor(240,248,240);
-  doc.roundedRect(40, y, 515, 260, 18, 18, 'F');
-
+  doc.roundedRect(40, y, PAGE_WIDTH - 80, 260, 18, 18, 'F');
   doc.setTextColor(34,139,34);
   doc.setFontSize(16);
   doc.text("Personal Details", 60, y + 30);
 
-  let leftX = 60;
-  let rightX = 320;
-  let rowY = y + 60;
-
-  rowY = row("Gender", gender, leftX, rowY, 220);
-  rowY = row("NIC", nic, leftX, rowY, 220);
-  rowY = row("Age", age, leftX, rowY, 220);
-
-  let rowY2 = y + 60;
-  rowY2 = row("Passport Available", passport, rightX, rowY2, 220);
-  rowY2 = row("Been Abroad", abroad, rightX, rowY2, 220);
-  rowY2 = row("Phone Number", phone, rightX, rowY2, 220);
+  let leftY = y + 60;
+  let rightY = y + 60;
+  leftY = row("Gender", gender, 60, leftY, 220);
+  leftY = row("NIC", nic, 60, leftY, 220);
+  leftY = row("Age", age, 60, leftY, 220);
+  rightY = row("Passport Available", passport, 320, rightY, 220);
+  rightY = row("Been Abroad", abroad, 320, rightY, 220);
+  rightY = row("Phone Number", phone, 320, rightY, 220);
 
   y += 280;
 
-  // ===== SECTION 2 : SKILLS & ADDITIONAL INFO =====
-  doc.setFillColor(255);
-  doc.roundedRect(40, y, 515, 150, 18, 18, 'F');
-  doc.setDrawColor(220);
-  doc.roundedRect(40, y, 515, 150, 18, 18);
+  /* =============================
+     SKILLS & ADDITIONAL INFO (CALCULATE HEIGHT FIRST)
+  ============================= */
+  let tempY = y + 60;
+  const items = [
+    {label: "Skills", value: skills},
+    {label: "FBR & PR", value: fbrpr},
+    {label: "6 Months", value: sixMonths},
+    {label: "Experience", value: experience},
+    {label: "Category", value: category}
+  ];
 
+  // Calculate total height
+  let totalHeight = 0;
+  for (let item of items) {
+    const lines = doc.splitTextToSize(item.value, PAGE_WIDTH - 120 - 20);
+    const boxHeight = Math.max(28, lines.length * 16 + 16);
+    totalHeight += boxHeight + 24;
+  }
+
+  // Draw container
+  doc.setFillColor(255);
+  doc.setDrawColor(220);
+  doc.roundedRect(40, y, PAGE_WIDTH - 80, totalHeight + 50, 18, 18, 'FD');
+
+  // Title
   doc.setTextColor(34,139,34);
   doc.setFontSize(16);
   doc.text("Skills & Additional Information", 60, y + 30);
 
-  let infoY = y + 60;
-  infoY = row("Skills", skills || "None", 60, infoY, 460);
-
-  if (passport === "Yes") {
-    infoY = row("Passport Number", passportNo, 60, infoY, 460);
+  // Draw content
+  tempY = y + 60;
+  for (let item of items) {
+    tempY = row(item.label, item.value, 60, tempY, PAGE_WIDTH - 120);
   }
 
-  /* -------------------------
+  /* =============================
      FOOTER
-  ------------------------- */
+  ============================= */
   doc.setFontSize(10);
   doc.setTextColor(130);
-  doc.text("© Greenway Agencies | www.greenway.lk", 297, 825, null, null, "center");
+  doc.text("© Greenway Agencies | www.greenway.lk", PAGE_WIDTH / 2, PAGE_HEIGHT - 20, { align: "center" });
 
-  doc.save(`${fullname || "Application"}_Application.pdf`);
+  doc.save(`${fullname}_Application.pdf`);
 }
