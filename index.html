@@ -1,4 +1,4 @@
-<!DOCTYPE html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -136,6 +136,22 @@ button:hover { background: #10941f; }
       <input type="text" id="token" placeholder="Enter token number">
     </div>
 
+
+        <!-- Country Selection -->
+    <div class="block">
+      <div class="label">Preferred Country</div>
+      <select id="country" style="width:100%; padding:12px; border-radius:8px; border:1px solid #ccc;">
+        <option value="">Select Country</option>
+        <option value="Kuwait">Kuwait</option>
+        <option value="Dubai">Dubai</option>
+        <option value="Oman">Oman</option>
+        <option value="Bahrain">Bahrain</option>
+        <option value="Qatar">Qatar</option>
+        <option value="Cyprus">Cyprus</option>
+        <option value="Singapore">Singapore</option>
+      </select>
+    </div>
+
     <!-- Name -->
     <div class="block">
       <div class="label">Full Name</div>
@@ -180,6 +196,12 @@ button:hover { background: #10941f; }
           <div class="option">No</div>
         </label>
       </div>
+
+      <!-- Passport Number (Hidden by default) -->
+      <div id="passportNumberBlock" style="display:none; margin-top:12px;">
+        <div class="label">Passport Number</div>
+        <input type="text" id="passportNumber" placeholder="Enter passport number">
+      </div>
     </div>
 
 
@@ -203,7 +225,7 @@ button:hover { background: #10941f; }
 
     <!-- ✅ NEW: Within 6 Months -->
     <div class="block">
-      <div class="label"> 9 months?</div>
+      <div class="label">Can travel within 6 months?</div>
       <div class="row">
         <label><input type="radio" name="six_months" value="Yes"><div class="option">Yes</div></label>
         <label><input type="radio" name="six_months" value="No"><div class="option">No</div></label>
@@ -244,6 +266,17 @@ button:hover { background: #10941f; }
     <div class="block">
       <div class="label">Phone Number</div>
       <input type="text" id="phone" placeholder="07XXXXXXXX">
+    </div>
+
+        <!-- Remark -->
+    <div class="block">
+      <div class="label">Remark</div>
+      <textarea
+        id="remark"
+        rows="3"
+        placeholder="Enter remarks (medical, availability, special notes, etc.)"
+        style="width:100%; padding:12px; border-radius:8px; border:1px solid #ccc; resize:none;">
+      </textarea>
     </div>
 
     <!-- Photo -->
@@ -310,6 +343,14 @@ function togglePassport(show) {
   document.getElementById("passportBox").style.display = show ? "block" : "none";
 }
 
+
+
+function togglePassport(hasPassport) {
+  document.getElementById("passportNumberBlock").style.display =
+    hasPassport ? "block" : "none";
+}
+
+
 /* LOGIN USERS */
 const users = { kasun: "1234", admin: "admin123" };
 
@@ -329,6 +370,3 @@ function login(){
 
 </body>
 </html>
-
-
-
