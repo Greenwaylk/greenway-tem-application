@@ -332,11 +332,13 @@ function calculateAgeFromNIC() {
     return;
   }
 
-  const currentYear = new Date().getFullYear();
-  const age = currentYear - birthYear;
+  // ✅ FIXED YEAR (2025)
+  const FIXED_YEAR = 2025;
+  const age = FIXED_YEAR - birthYear;
 
   ageBox.textContent = age;
 }
+
 
 /* Passport toggle */
 function togglePassport(show) {
@@ -370,3 +372,4 @@ function login(){
 
 </body>
 </html>
+
