@@ -183,26 +183,41 @@ button:hover { background: #10941f; }
       </div>
     </div>
 
-    <!-- Passport -->
-    <div class="block">
-      <div class="label">Do you have a Passport? (Is it Valid Passport)</div>
-      <div class="row">
-        <label>
-          <input type="radio" name="passport" value="Yes" onclick="togglePassport(true)">
-          <div class="option">Yes</div>
-        </label>
-        <label>
-          <input type="radio" name="passport" value="No" onclick="togglePassport(false)">
-          <div class="option">No</div>
-        </label>
+          <!-- Passport -->
+      <div class="block">
+        <div class="label">Do you have a Passport? (Is it Valid Passport)</div>
+        <div class="row">
+          <label>
+            <input type="radio" name="passport" value="Yes" onclick="togglePassport(true)">
+            <div class="option">Yes</div>
+          </label>
+          <label>
+            <input type="radio" name="passport" value="No" onclick="togglePassport(false)">
+            <div class="option">No</div>
+          </label>
+        </div>
+
+        <!-- Passport Number -->
+        <div id="passportNumberBlock" class="hidden" style="margin-top:12px;">
+          <div class="label">Passport Number</div>
+          <input type="text" id="passportNumber" placeholder="Enter passport number">
+        </div>
       </div>
 
-      <!-- Passport Number (Hidden by default) -->
-      <div id="passportNumberBlock" style="display:none; margin-top:12px;">
-        <div class="label">Passport Number</div>
-        <input type="text" id="passportNumber" placeholder="Enter passport number">
+      <!-- After 6 Months (Hidden initially) -->
+      <div class="block hidden" id="sixMonthsBlock">
+        <div class="label">After 6 months?</div>
+        <div class="row">
+          <label>
+            <input type="radio" name="six_months" value="Yes">
+            <div class="option">Yes</div>
+          </label>
+          <label>
+            <input type="radio" name="six_months" value="No">
+            <div class="option">No</div>
+          </label>
+        </div>
       </div>
-    </div>
 
 
     <!-- Abroad -->
@@ -214,6 +229,17 @@ button:hover { background: #10941f; }
       </div>
     </div>
 
+
+     <!-- ✅ NEW: Experience -->
+    <div class="block">
+      <div class="label">Experience</div>
+      <div class="row">
+        <label><input type="radio" name="experience" value="Experienced"><div class="option">Experienced</div></label>
+        <label><input type="radio" name="experience" value="No Experience"><div class="option">No Experience</div></label>
+      </div>
+    </div>
+
+
     <!-- ✅ NEW: FBR & PR -->
     <div class="block">
       <div class="label">FBR & PR</div>
@@ -223,24 +249,9 @@ button:hover { background: #10941f; }
       </div>
     </div>
 
-    <!-- ✅ NEW: Within 6 Months -->
-    <div class="block">
-      <div class="label">Can travel within 6 months?</div>
-      <div class="row">
-        <label><input type="radio" name="six_months" value="Yes"><div class="option">Yes</div></label>
-        <label><input type="radio" name="six_months" value="No"><div class="option">No</div></label>
-      </div>
-    </div>
+   
 
-    <!-- ✅ NEW: Experience -->
-    <div class="block">
-      <div class="label">Experience</div>
-      <div class="row">
-        <label><input type="radio" name="experience" value="Experienced"><div class="option">Experienced</div></label>
-        <label><input type="radio" name="experience" value="No Experience"><div class="option">No Experience</div></label>
-      </div>
-    </div>
-
+   
     <!-- Skills -->
     <div class="block">
       <div class="label">Any Skills?</div>
@@ -348,9 +359,21 @@ function togglePassport(show) {
 
 
 function togglePassport(hasPassport) {
+  // Passport Number
   document.getElementById("passportNumberBlock").style.display =
     hasPassport ? "block" : "none";
+
+  // After 6 months
+  document.getElementById("sixMonthsBlock").style.display =
+    hasPassport ? "block" : "none";
+
+  // Reset if NO selected
+  if (!hasPassport) {
+    document.getElementById("passportNumber").value = "";
+    document.querySelectorAll('input[name="six_months"]').forEach(r => r.checked = false);
+  }
 }
+
 
 
 /* LOGIN USERS */
@@ -372,4 +395,3 @@ function login(){
 
 </body>
 </html>
-
