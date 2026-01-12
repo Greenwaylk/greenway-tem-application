@@ -196,7 +196,8 @@ async function generatePDF() {
     { align: "center" }
   );
 
-  doc.save(`${fullname}_Application.pdf`);
+ doc.save(`${token}_${country}_Application.pdf`);
+
 
   /* =============================
      RESET FORM
@@ -209,3 +210,4 @@ async function generatePDF() {
   document.getElementById("photoPreview").src = "";
   document.getElementById("ageDisplay").textContent = "--";
 }
+
