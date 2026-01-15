@@ -159,14 +159,21 @@ button { width:100%; padding:14px; background:#44ca1e; color:#fff; font-size:16p
   </div>
 
   <!-- Photo -->
-  <div class="block">
-    <div class="label">Photo</div>
-    <div class="photo" onclick="document.getElementById('photoInput').click()">
-      Tap to Upload
-      <input id="photoInput" type="file" accept="image/*" hidden onchange="previewPhoto(event)">
-      <img id="photoPreview">
-    </div>
+<div class="block">
+  <div class="label">Photo</div>
+  <div class="photo" onclick="document.getElementById('photoInput').click()">
+    Tap to Open Camera
+    <input
+      id="photoInput"
+      type="file"
+      accept="image/*"
+      capture="environment"
+      hidden
+      onchange="previewPhoto(event)"
+    >
+    <img id="photoPreview">
   </div>
+</div>
 
   <button onclick="generatePDF()">Submit & Generate PDF</button>
 </div>
